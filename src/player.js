@@ -13,7 +13,7 @@ Player = function(game) {
   this.spriteHalfHeight = this.spriteHeight / 2;
   
   // Player state variables
-  this.position = new Vector(300, 100);  // in pixels
+  this.position = new Vector(300, 479);  // in pixels
   this.velocity = new Vector(0, 0);      // in pixels per second
   
   // Movement constants
@@ -48,13 +48,44 @@ Player.prototype.update = function(timeStep, input) {
     this.horizontalState = "MovingRight";
     this.velocity.x += this.acceleration * seconds; 
   }
+  if (!input.left && !input.right)
+  {
+	this.velocity.x /= 1.3;
+  }
+  if(input.space) {
+	if (this.verticalState === "OnGround")
+	{
+		this.verticalState = "Jumping";
+		this.velocity.y -= 500;
+	}
+	
+  }
   Math.clamp(this.velocity.x, -this.maxVelocity, this.maxVelocity);
   
   // Apply horizontal velocity
   this.position.x += this.velocity.x * seconds;
   
   // Update vertical state
- 
+  
+  
+  if (input.space)
+  {
+	this.velocity.y += 600 * seconds;
+  }
+  else
+  {
+	this.velocity.y += 800 * seconds;
+  }
+  this.position.y += this.velocity.y * seconds;
+  
+  console.log(this.position.y);
+  
+  if (this.position.y >= 479)
+  {
+	this.verticalState = "OnGround";
+	this.position.y = 479;
+	this.velocity.y = 0;
+  }
   
   // Determine the current frame of animation
   // Start with a "default" frame
@@ -112,7 +143,7 @@ Player.prototype.render = function(timeStep, ctx) {
   ctx.save();
   
   // Translate sprite to on-screen position
-  ctx.translate(this.position.x, this.position.y);
+  ctx.translate((this.position.x%800+800)%800, (this.position.y%480+480)%480);
   
   // Flip direction sprite faces when moving left 
   // (animations are all drawn facing right)
