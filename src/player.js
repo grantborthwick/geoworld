@@ -50,7 +50,7 @@ Player.prototype.update = function(timeStep, input) {
   }
   if (!input.left && !input.right)
   {
-	this.velocity.x /= 1.3;
+	this.velocity.x /= 1.01;
   }
   if(input.space) {
 	if (this.verticalState === "OnGround")
@@ -70,16 +70,17 @@ Player.prototype.update = function(timeStep, input) {
   
   if (input.space)
   {
-	this.velocity.y += 600 * seconds;
+	this.velocity.y += 600 * seconds; // Tap space to jump
   }
   else
   {
-	this.velocity.y += 800 * seconds;
+	this.velocity.y += 800 * seconds; // Hold space to jump higher
   }
   this.position.y += this.velocity.y * seconds;
   
   console.log(this.position.y);
   
+  // Robot lands on ground
   if (this.position.y >= 479)
   {
 	this.verticalState = "OnGround";
@@ -133,8 +134,44 @@ Player.prototype.update = function(timeStep, input) {
         this.frame.x = 4 * this.spriteWidth;  // Fifth Column
     }
     
-  } else if (this.verticalState === "Jumping") {
-  } else if (this.verticalState === "Falling") {
+  } 
+  else if (this.verticalState === "Jumping") {
+	// Determine the amount of "lean" based on the direction
+    // and velocity of the sprite
+    if(this.horizontalState === "MovingLeft") {
+    
+      // All ground-based moving animations 
+      // fall in the second row
+      this.frame.y = this.spriteHeight;
+      
+      // Determine the frame based on velocity
+      if(this.velocity.x > 0.5) 
+        this.frame.x = this.spriteWidth;      // Second Column
+      else if (this.velocity.x > -0.5)
+        this.frame.x = 2 * this.spriteWidth;  // Third Column
+      else if (this.velocity.x > -8)
+        this.frame.x = 3 * this.spriteWidth;   // Foruth Column
+      else
+        this.frame.x = 4 * this.spriteWidth;  // Fifth Column
+    
+    }else if(this.horizontalState === "MovingRight") {
+      
+      // All ground-based moving animations 
+      // fall in the second row
+      this.frame.y = this.spriteHeight;
+      
+      // Determine the frame based on velocity
+      if(this.velocity.x < -0.5) 
+        this.frame.x = this.spriteWidth;      // Second Column
+      else if (this.velocity.x < 0.5)
+        this.frame.x = 2 * this.spriteWidth;  // Third Column
+      else if (this.velocity.x < 8)
+        this.frame.x = 3 * this.spriteWidth;   // Foruth Column
+      else
+        this.frame.x = 4 * this.spriteWidth;  // Fifth Column
+    }
+  } 
+  else if (this.verticalState === "Falling") {
   }  
 }
 
