@@ -1,0 +1,12 @@
+<html>
+<head>
+<script>
+document.onkeydown=function(key){appendToDiv("content",key.keyCode+"</br>");}
+function writeToDiv(location, message) {document.getElementById(location).innerHTML = message;}
+function appendToDiv(location, message) {document.getElementById(location).innerHTML += message;}
+</script>
+</head>
+<body>
+<div id="content"></div>
+</body>
+</html>
